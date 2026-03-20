@@ -1,5 +1,6 @@
+# Commented out unused datetime import - Optional still needed for TokenData null email validation
 from pydantic import BaseModel, EmailStr
-from datetime import datetime
+# from datetime import datetime
 from typing import Optional
 
 class UserCreate(BaseModel):
