@@ -1,4 +1,3 @@
-# Fixed type annotations & implemented full CRUD routes with JWT auth and authorization checks
 from fastapi import APIRouter, Depends, HTTPException, status
 from app.utils.dependencies import get_current_user 
 from sqlalchemy.orm import Session
@@ -6,6 +5,8 @@ from app.database import get_db
 from app.schemas.endpoint import EndpointCreate,EndpointResponse
 from app.models.endpoint import Endpoint
 from app.models.users import User
+from app.services.monitoring_service import check_endpoint
+
 
 router = APIRouter(
     prefix="/endpoints"
@@ -45,3 +46,17 @@ def delete_endpoint(id:int,db:Session=Depends(get_db),user:User=Depends(get_curr
     db.commit()
 
     return {"message":"Deleted"}
+
+
+@router.post("/{id}/check")
+async def run_check(id:int, db:Session= Depends(get_db),user= Depends(get_current_user)):
+    endpoint=db.query(Endpoint).filter(Endpoint.id== id).first()
+
+    if not endpoint:
+        return {"error": "Endpoint not found"}
+    result=await check_endpoint(endpoint,db)
+    return {
+        "status_code":result.status_code,
+        "response_time":result.response_time,
+        "success":result.success
+            }
