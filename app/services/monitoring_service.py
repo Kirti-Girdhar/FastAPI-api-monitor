@@ -4,6 +4,7 @@ import time
 from sqlalchemy.orm import Session
 
 from app.models.check import Check
+from app.models.alert import Alert
 
 
 async def check_endpoint(endpoint, db: Session):
@@ -52,6 +53,10 @@ async def check_endpoint(endpoint, db: Session):
 )
 
     if len(last_checks) == 3 and all(not c.success for c in last_checks):
-        print("ALERT: Endpoint failed 3 times")
+        # print("ALERT: Endpoint failed 3 times")
+        alert=Alert(endpoint_id=endpoint.id,
+                    message="Endpoint failed 3 consecutive times")
 
+        db.add(alert)
+        db.commit()
     return check
