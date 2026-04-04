@@ -27,9 +27,10 @@ def create_endpoint(endpoint:EndpointCreate,db:Session= Depends(get_db), user:Us
     return new_endpoint
 
 @router.get("/")
-def get_endpoints(db:Session=Depends(get_db),user:User=Depends(get_current_user)):
-    points= db.query(Endpoint).filter(Endpoint.user_id==user.id).all()
-    # points= db.query(Endpoint).all()
+def get_endpoints(skip: int = 0,limit: int = 10,db:Session=Depends(get_db),user:User=Depends(get_current_user)):
+    query = db.query(Endpoint).filter(Endpoint.user_id==user.id)
+    total = query.count()
+    points = query.offset(skip).limit(limit).all()
 
     return points
 
