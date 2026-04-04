@@ -15,7 +15,7 @@ router=APIRouter(
 @router.get("/")
 def get_alerts(skip: int=0, limit:int=10,db:Session=Depends(get_db),current_user: User=Depends(get_current_user)):
 
-    query = db.query(Alert).join(Endpoint).filter(Endpoint.user_id == current_user.id)
+    query = db.query(Alert).join(Endpoint).filter(Endpoint.user_id == current_user.id).order_by(Alert.created_at.desc())
     total = query.count()
     alerts = query.offset(skip).limit(limit).all()
 
