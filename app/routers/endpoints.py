@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from app.utils.dependencies import get_current_user 
 from sqlalchemy.orm import Session
 from app.database import get_db
@@ -27,7 +27,7 @@ def create_endpoint(endpoint:EndpointCreate,db:Session= Depends(get_db), user:Us
     return new_endpoint
 
 @router.get("/")
-def get_endpoints(skip: int = 0,limit: int = 10,db:Session=Depends(get_db),user:User=Depends(get_current_user)):
+def get_endpoints(skip: int = 0,limit: int = Query(10, le=50),db:Session=Depends(get_db),user:User=Depends(get_current_user)):
     query = db.query(Endpoint).filter(Endpoint.user_id==user.id)
     total = query.count()
     points = query.offset(skip).limit(limit).all()
