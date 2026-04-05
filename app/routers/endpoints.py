@@ -51,10 +51,11 @@ def delete_endpoint(id:int,db:Session=Depends(get_db),user:User=Depends(get_curr
 # This endpoint is for testing purposes only, to trigger a check manually
 @router.post("/{id}/check")
 async def run_check(id:int, db:Session= Depends(get_db),user:User= Depends(get_current_user)):
-    endpoint=db.query(Endpoint).filter(Endpoint.id== id).first()
+    endpoint=db.query(Endpoint).filter(Endpoint.id== id,Endpoint.user_id==user.id).first()
 
     if not endpoint:
-        return {"error": "Endpoint not found"}
+        raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,detail="Endpoint not found")    
     result=await check_endpoint(endpoint,db)
     return {
         "status_code":result.status_code,
