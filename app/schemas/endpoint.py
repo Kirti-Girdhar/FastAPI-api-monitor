@@ -1,13 +1,13 @@
 # Request/Response schemas with validation - EndpointCreate for input, EndpointResponse with id/user_id for output
-from pydantic import BaseModel
+from pydantic import BaseModel, HttpUrl
 from datetime import datetime
-from typing import Optional
+from typing import Optional,Literal
 
 
 class EndpointCreate(BaseModel):
     name: str
-    url: str
-    method: str
+    url: HttpUrl
+    method: Literal["GET", "POST"]
     check_interval: int
 
 class EndpointResponse(EndpointCreate):
