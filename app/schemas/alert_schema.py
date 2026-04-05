@@ -9,3 +9,7 @@ class AlertResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class AlertList(BaseModel):
+    total: int
+    alerts: list[AlertResponse]
