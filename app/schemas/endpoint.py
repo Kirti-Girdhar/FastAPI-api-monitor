@@ -1,6 +1,8 @@
 # Request/Response schemas with validation - EndpointCreate for input, EndpointResponse with id/user_id for output
 from pydantic import BaseModel
+from datetime import datetime
 from typing import Optional
+
 
 class EndpointCreate(BaseModel):
     name: str
@@ -12,5 +14,16 @@ class EndpointResponse(EndpointCreate):
     id: int
     user_id: int
     
+    class Config:
+        from_attributes = True
+
+class EndpointResult(BaseModel):
+    id: int
+    name: str
+    url: str
+    method: str
+    check_interval: int
+    created_at: datetime
+# fastAPI can't convert sqlalchemy object to json, with it, it can automatically convert 
     class Config:
         from_attributes = True
