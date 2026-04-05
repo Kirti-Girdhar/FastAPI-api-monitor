@@ -20,7 +20,7 @@ class EndpointResponse(EndpointCreate):
 class EndpointResult(BaseModel):
     id: int
     name: str
-    url: str
+    url: HttpUrl
     method: str
     check_interval: int
     created_at: datetime
