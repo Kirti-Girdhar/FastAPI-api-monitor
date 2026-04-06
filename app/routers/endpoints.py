@@ -19,7 +19,15 @@ def protected(current_user: User = Depends(get_current_user)):
 @router.post("/",response_model=EndpointResponse)
 def create_endpoint(endpoint:EndpointCreate,db:Session= Depends(get_db), user:User=Depends(get_current_user)):
     # new_endpoint=Endpoint(name=endpoint.name,url=endpoint.url,method=endpoint.method, check_interval=endpoint.check_interval,user_id=user.id)
-    new_endpoint=Endpoint(**endpoint.dict(),user_id=user.id)
+    # new_endpoint=Endpoint(**endpoint.dict(),user_id=user.id)
+     # Convert HttpUrl to string before storing in database
+    new_endpoint=Endpoint(
+        name=endpoint.name,
+        url=str(endpoint.url),
+        method=endpoint.method,
+        check_interval=endpoint.check_interval,
+        user_id=user.id
+    )
     db.add(new_endpoint)
     db.commit()
     db.refresh(new_endpoint)
@@ -59,6 +67,6 @@ async def run_check(id:int, db:Session= Depends(get_db),user:User= Depends(get_c
     result=await check_endpoint(endpoint,db)
     return {
         "status_code":result.status_code,
-        "response_time":result.response_time,
+        "response_time":round(result.response_time, 4),
         "success":result.success
             }
