@@ -2,6 +2,11 @@ from fastapi import FastAPI
 from app.database import Base, engine
 from app.routers import auth, endpoints, alerts, stats
 from app.scheduler.monitor_scheduler import start_scheduler,scheduler
+from app.utils.logger import setup_logger
+
+# Initialize logger
+logger = setup_logger()
+logger.info("Application started")
 
 # Create all tables
 Base.metadata.create_all(bind=engine)
