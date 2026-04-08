@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 from app.database import Base, engine
 from app.routers import auth, endpoints, alerts, stats
