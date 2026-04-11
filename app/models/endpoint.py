@@ -1,5 +1,6 @@
 # Endpoint model with relationship to User model - supports create, read, delete operations via REST API
-from sqlalchemy import Column, Integer,String,ForeignKey
+from sqlalchemy import Column, Integer,String,ForeignKey, DateTime
+from datetime import datetime
 from app.database import Base
 
 class Endpoint(Base):
@@ -10,6 +11,7 @@ class Endpoint(Base):
     url=Column(String, nullable=False)
     method=Column(String, nullable=False)
     check_interval=Column(Integer)
+    created_at=Column(DateTime, default=datetime.utcnow)
 
     user_id=Column(Integer, ForeignKey("users.id"))
 
