@@ -138,7 +138,7 @@ FastAPI-api-monitor/
    ```
    DATABASE_HOSTNAME=localhost
    DATABASE_PORT=5432
-   DATABASE_USERNAME=postgres
+   DATABASE_USERNAME=your_db_username
    DATABASE_PASSWORD=your_password
    DATABASE_NAME=api_monitor
    SECRET_KEY=your-secret-key-here
@@ -261,10 +261,6 @@ curl -X GET "http://localhost:8000/stats/" \
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Support
 
