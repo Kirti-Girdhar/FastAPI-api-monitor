@@ -9,7 +9,8 @@ from app.services.monitoring_service import check_endpoint
 
 
 router = APIRouter(
-    prefix="/endpoints"
+    prefix="/endpoints",
+    tags=["endpoints"],
 )
 
 @router.get("/protected")
