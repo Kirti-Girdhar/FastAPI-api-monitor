@@ -179,28 +179,20 @@ pytest app/tests/
 | POST | `/endpoints/` | Create a new endpoint to monitor |
 | GET | `/endpoints/` | Get all endpoints for the current user |
 | GET | `/endpoints/{id}` | Get endpoint details |
-| PUT | `/endpoints/{id}` | Update endpoint configuration |
 | DELETE | `/endpoints/{id}` | Delete an endpoint |
-| GET | `/endpoints/protected` | Protected endpoint test |
+| GET | `/endpoints/protected` | Protected endpoint user |
 
 ### Alert Management
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/alerts/` | Create a new alert rule |
 | GET | `/alerts/` | Get all alerts for the current user |
-| GET | `/alerts/{id}` | Get alert details |
-| PUT | `/alerts/{id}` | Update alert configuration |
-| DELETE | `/alerts/{id}` | Delete an alert |
 
 ### Statistics & Analytics
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/stats/` | Get statistics for all endpoints |
 | GET | `/stats/{endpoint_id}` | Get detailed stats for specific endpoint |
-| GET | `/stats/{endpoint_id}/uptime` | Get uptime percentage |
-| GET | `/stats/{endpoint_id}/response_times` | Get response time metrics |
 
 ### Health Check
 
