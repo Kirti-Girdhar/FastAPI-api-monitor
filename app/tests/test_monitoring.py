@@ -183,3 +183,5 @@ async def test_alert_creation_after_3_failures(mocker):
 
     assert mock_db.add.called
     assert mock_db.commit.called
+
+
