@@ -1,3 +1,5 @@
+import asyncio
+
 import httpx
 import time
 import logging
@@ -8,6 +10,9 @@ from app.models.alert import Alert
 
 logger=logging.getLogger(__name__)
 
+MAX_RETRIES = 3
+TIMEOUT_SECONDS = 5
+RETRY_DELAY = 2
 
 async def check_endpoint(endpoint, db: Session):
 
@@ -15,29 +20,44 @@ async def check_endpoint(endpoint, db: Session):
 
     success = False
     status_code = 0
+    for attempt in range(MAX_RETRIES):
+        try:
+            logger.info(f"Attempt {attempt+1}:" f"Checking endpoint: {endpoint.url} using method {endpoint.method}")
+            async with httpx.AsyncClient(timeout=TIMEOUT_SECONDS) as client:
 
-    try:
-        logger.info(f"Checking endpoint: {endpoint.url} using method {endpoint.method}")
-        async with httpx.AsyncClient() as client:
+                response = await client.request(
+                    method=endpoint.method,
+                    url=endpoint.url,
+                    timeout=TIMEOUT_SECONDS
+                    )
 
-            response = await client.request(
-                method=endpoint.method,
-                url=endpoint.url,
-                timeout=5
-            )
+            status_code = response.status_code
 
-        status_code = response.status_code
-
-        if status_code < 400:
-            success = True
+            if status_code < 400:
+                success = True
+                break
         
         # logger.info(f"Checked {endpoint.url} | Status: {status_code} | Success: {success}")
 
-    except Exception as e:
-        success = False
-        status_code = 0 
-        logger.error(f"Request failed for {endpoint.url} "
-            f"Error: {str(e)}")
+        except httpx.TimeoutException:
+
+            logger.error(
+                f"Timeout on attempt "
+                f"{attempt+1} "
+                f"for {endpoint.url}"
+            )
+
+        except Exception as e:
+            success = False
+            status_code = 0 
+            logger.error(
+                f"Error on attempt "
+                f"{attempt+1} "
+                f"for {endpoint.url}: "
+                f"{str(e)}"
+            )
+        if attempt < MAX_RETRIES - 1:
+            await asyncio.sleep(RETRY_DELAY)
         
     response_time = time.time() - start_time
     logger.info(
