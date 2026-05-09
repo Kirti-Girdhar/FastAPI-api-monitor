@@ -95,3 +95,53 @@ async def test_retry_success(mocker):
 
     # Should stop after first success
     assert mock_request.call_count == 1
+
+@pytest.mark.asyncio
+async def test_three_failures_trigger_alert(mocker):
+
+    endpoint = Endpoint(
+        id=3,
+        url="https://fail.com",
+        method="GET"
+    )
+
+    mock_response = mocker.Mock()
+    mock_response.status_code = 500
+
+    mock_request = AsyncMock(
+        return_value=mock_response
+    )
+
+    mocker.patch(
+        "httpx.AsyncClient.request",
+        mock_request
+    )
+
+    mock_db = MagicMock()
+
+    mock_query = MagicMock()
+
+    mock_db.query.return_value = mock_query
+
+    mock_query.filter.return_value = mock_query
+    mock_query.order_by.return_value = mock_query
+    mock_query.limit.return_value = mock_query
+
+    # Simulate 3 failed checks
+    fake_checks = [
+        MagicMock(success=False),
+        MagicMock(success=False),
+        MagicMock(success=False)
+    ]
+
+    mock_query.all.return_value = fake_checks
+
+    mock_query.first.return_value = None
+
+    await check_endpoint(
+        endpoint,
+        mock_db
+    )
+
+    # Verify alert creation
+    assert mock_db.add.called
