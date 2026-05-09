@@ -1,10 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
-from app.models import users
-from app.utils.security import verify_password, hash_password, create_access_token
-from app.schemas import user
-from ..database import get_db
 from fastapi.security import OAuth2PasswordRequestForm
+from app.models import users
+from app.schemas import user
+from app.utils.security import verify_password, hash_password, create_access_token
+
+from ..database import get_db
+from app.core.limiter import limiter
 
 router = APIRouter(
     prefix="/auth",
@@ -12,7 +14,8 @@ router = APIRouter(
 )
 
 @router.post("/register")
-def register(user_data:user.UserCreate, db: Session = Depends(get_db)):
+@limiter.limit("3/minute")
+def register( request: Request,user_data:user.UserCreate, db: Session = Depends(get_db)):
     # Check if user already exists
     existing_user = db.query(users.User).filter(users.User.email == user_data.email).first()
     if existing_user:
@@ -31,7 +34,8 @@ def register(user_data:user.UserCreate, db: Session = Depends(get_db)):
     return {"message": "User registered successfully"}
 
 @router.post("/login", response_model=user.Token)
-def login(form_data: OAuth2PasswordRequestForm = Depends(), db:Session=Depends(get_db)):
+@limiter.limit("5/minute")
+def login(request: Request,form_data: OAuth2PasswordRequestForm = Depends(), db:Session=Depends(get_db)):
     db_user =db.query(users.User).filter(users.User.email== form_data.username).first()
 
     if not db_user:
