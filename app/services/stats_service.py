@@ -1,3 +1,4 @@
+import time
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from app.models.check import Check
