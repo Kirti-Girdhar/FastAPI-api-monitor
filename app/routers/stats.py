@@ -4,7 +4,7 @@ from app.database import get_db
 from app.models.users import User
 from app.models.endpoint import Endpoint
 from app.schemas.stats_schema import StatsResponse
-from app.services.stats_service import get_endpoint_stats
+from app.services.stats_service import get_endpoint_stats 
 from app.utils.dependencies import get_current_user
 
 router=APIRouter(
