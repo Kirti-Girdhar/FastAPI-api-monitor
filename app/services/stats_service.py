@@ -1,8 +1,11 @@
 import time
+import logging
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from app.models.check import Check
 from app.core.cache import cache_store, CACHE_TTL
+
+logger = logging.getLogger(__name__)
 
 def get_endpoint_stats(endpoint_id :int , db: Session):
 
@@ -14,7 +17,7 @@ def get_endpoint_stats(endpoint_id :int , db: Session):
 
         # Cache still valid
         if age < CACHE_TTL:
-            print("Returning cached stats")
+            logger.info("Returning cached stats")
             return cached_data["data"]
 
     checks = (
@@ -62,6 +65,6 @@ def get_endpoint_stats(endpoint_id :int , db: Session):
         "timestamp": current_time
     }
 
-    print("Returning fresh stats")
+    logger.info("Returning fresh stats")
 
     return stats
