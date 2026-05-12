@@ -4,7 +4,7 @@ import httpx
 import time
 import logging
 from sqlalchemy.orm import Session
-
+from app.core.cache import cache_store
 from app.models.check import Check
 from app.models.alert import Alert
 
@@ -77,6 +77,11 @@ async def check_endpoint(endpoint, db: Session):
 
     db.add(check)
     db.commit()
+
+    cache_key = f"stats_{endpoint.id}"
+    if cache_key in  cache_store:
+        del cache_store[cache_key]
+        logger.info(f"Cache cleared for endpoint{endpoint.id}")
 
     last_checks = (
     db.query(Check)
