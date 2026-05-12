@@ -19,3 +19,4 @@ def endpoint_stats(endpoint_id: int, db: Session = Depends(get_db), current_user
         raise HTTPException(status_code=404, detail="Endpoint not found")
     stats= get_endpoint_stats(endpoint_id,db)
     return stats
+    
