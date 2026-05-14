@@ -51,7 +51,7 @@ async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
     )
 
 # Create all tables
-Base.metadata.create_all(bind=engine)
+# Base.metadata.create_all(bind=engine)
 
 API_PREFIX = "/api/v1"
 app.include_router(auth.router, prefix=API_PREFIX)
