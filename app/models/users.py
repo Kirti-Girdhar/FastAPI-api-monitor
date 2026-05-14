@@ -9,4 +9,4 @@ class User(Base):
     email = Column(String, unique=True, nullable=False, index=True)
     hashed_password=Column(String)
     created_at= Column(DateTime,nullable=False,default=datetime.utcnow)
-
+    phone_number = Column(String, nullable=True)
