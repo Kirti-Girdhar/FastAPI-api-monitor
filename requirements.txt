@@ -11,7 +11,7 @@ httptools==0.7.1
 # ===== DATABASE & ORM =====
 SQLAlchemy==2.0.48
 psycopg2-binary==2.9.11
-psycopg2==2.9.11
+# psycopg2==2.9.11
 
 # ===== AUTHENTICATION & SECURITY =====
 python-jose==3.5.0
@@ -53,4 +53,4 @@ click==8.3.1
 typing_extensions==4.15.0
 annotated-types==0.7.0
 
-alembic==1.14.2
+alembic==1.14.1
