@@ -1,3 +1,5 @@
+import os
+
 from pydantic_settings import BaseSettings
 
 
@@ -13,6 +15,7 @@ class Settings(BaseSettings):
     allowed_origins: list[str]
 
     class Config:
-        env_file = ".env"
+        env_file = os.getenv('ENV_FILE', '.env')
+        # env_file = ".env"
 
 settings=Settings()

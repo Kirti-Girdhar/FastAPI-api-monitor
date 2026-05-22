@@ -9,7 +9,7 @@ SQLALCHEMY_DATABASE_URL =f'postgresql://{settings.database_username}:{settings.d
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
-
+# print(SQLALCHEMY_DATABASE_URL)
 def get_db():
     db = SessionLocal()
     try:
